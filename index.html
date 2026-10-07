@@ -127,8 +127,7 @@
         }
 
         #update {
-            display: block;
-            margin: 10px auto 0;
+            display: none;
             opacity: 0;
             padding: 50px 20px;
             transition: opacity 2s ease;
@@ -351,113 +350,87 @@
     ========================= -->
 
     <script>
+    /* =========================
+    YOUTUBE PLAYER
+    ========================= */
 
-        /* =========================
-           YOUTUBE PLAYER
-        ========================= */
+    let player;
 
-        let player;
+    const confessionSong = "2zFldPf3WAQ";
+    const updateSong = "hR8JnpnMxiE";
 
-        // Load YouTube API
-        const tag = document.createElement("script");
+    // Load YouTube API
+    const tag = document.createElement("script");
+    tag.src = "https://www.youtube.com/iframe_api";
 
-        tag.src = "https://www.youtube.com/iframe_api";
+    const firstScriptTag =
+        document.getElementsByTagName("script")[0];
 
-        const firstScriptTag =
-            document.getElementsByTagName("script")[0];
-
-        firstScriptTag.parentNode.insertBefore(
-            tag,
-            firstScriptTag
-        );
+    firstScriptTag.parentNode.insertBefore(
+        tag,
+        firstScriptTag
+    );
 
 
-        // YouTube creates the player here
-        const updateSong = "hR8JnpnMxiE";
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player(
-                "youtube-player",
-                {
-                    height: "1",
-                    width: "1",
-                    videoId: "2zFldPf3WAQ",
-                    playerVars: {
-                        autoplay: 0,
-                        controls: 0,
-                        loop: 1,
-                        playlist: "2zFldPf3WAQ",
-                        playsinline: 1
-                    },
-                    events: {
-                        onReady: function(event) {
-                            event.target.setVolume(50);
-                        }
-                    }
+    // YouTube creates the player here
+    function onYouTubeIframeAPIReady() {
+
+        player = new YT.Player("youtube-player", {
+
+            height: "1",
+            width: "1",
+
+            videoId: confessionSong,
+
+            playerVars: {
+                autoplay: 0,
+                controls: 0,
+                loop: 1,
+                playlist: confessionSong,
+                playsinline: 1
+            },
+
+            events: {
+
+                onReady: function(event) {
+                    event.target.setVolume(50);
                 }
-            );
-        }
-
-
-
-        /* =========================
-           OPEN CONFESSION
-        ========================= */
-
-        function openConfession() {
-
-            const greeting =
-                document.getElementById("greeting");
-
-            const confession =
-                document.getElementById("confession");
-
-
-            /*
-                Start music immediately from
-                the user's button click.
-            */
-
-            if (player) {
-
-                player.playVideo();
 
             }
 
+        });
 
-            /*
-                Fade out greeting
-            */
-
-            greeting.style.opacity = "0";
+    }
 
 
+
+    function openConfession() {
+        const greeting =
+            document.getElementById("greeting");
+
+        const confession =
+            document.getElementById("confession");
+
+        // Play confession song
+        if (player) {
+            player.loadVideoById(confessionSong);
+            player.setVolume(50);
+            player.playVideo();
+        }
+
+        // Fade out greeting
+        greeting.style.opacity = "0";
+
+        setTimeout(function() {
+            greeting.style.display = "none";
+            confession.style.display = "block";
             setTimeout(function() {
-
-                greeting.style.display = "none";
-
-                confession.style.display = "block";
-
-
-                /*
-                    Small delay so the fade-in
-                    animation works.
-                */
-
-                setTimeout(function() {
-
-                    confession.style.opacity = "1";
-
-                }, 50);
+                confession.style.opacity = "1";
+            }, 50);
+        }, 1000);
 
 
-            }, 1000);
-
-
-            /*
-                Start floating hearts
-            */
-
-            startHearts();
+        startHearts();
 
         }
 
@@ -562,7 +535,6 @@
         }
 
         function openUpdate() {
-
         const greeting = document.getElementById("greeting");
         const confession = document.getElementById("confession");
         const update = document.getElementById("update");
